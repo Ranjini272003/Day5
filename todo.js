@@ -7,10 +7,8 @@ document.addEventListener("DOMContentLoaded", ()=> {
         updateStats();
     }
 })
-
-
-
 let tasks=[];
+let editIndex=null;
 
 const saveTasks = ()=> {
     localStorage.setItem('tasks',JSON.stringify(tasks))
@@ -21,7 +19,15 @@ const addTask = ()=> {
    const text =taskInput.value.trim();
 
    if(text){
-    tasks.push({ text:text, completed:false });
+    const now= new Date().toISOString();
+    if(editIndex !==null){
+      tasks[editIndex].text=text;
+      tasks[editIndex].updatedAt=now;
+      
+      editIndex=null;
+    }else {
+    tasks.push({ text:text, completed:false, createdAt:now,updatedAt:now,});
+    }
     taskInput.value ="";
     updateTaskList();
     updateStats();
@@ -30,6 +36,7 @@ const addTask = ()=> {
 };
 const toggleTaskComplete= (index) =>{
     tasks[index].completed = !tasks[index].completed;
+    tasks[index].updatedAt=new Date().toISOString();
     updateTaskList();
     updateStats();
     saveTasks();
@@ -43,19 +50,15 @@ const deleteTask =(index) => {
 };
 
 const editTask =(index) => {
-    const taskInput= document.getElementById('taskInput')
-    taskInput.value = tasks[index].text
-
-    tasks.splice(index,1);
-    updateTaskList();
-    updateStats();
-    saveTasks();
+    const taskInput= document.getElementById('taskInput');
+    taskInput.value = tasks[index].text;
+    editIndex=index;
 }
 
 const updateStats =(index) =>{
-    const completeTasks =tasks.filter(task =>task.completed).length
-    const totalTasks =tasks.length
-    const progress =(completeTasks/totalTasks) *100
+    const completeTasks =tasks.filter(task =>task.completed).length;
+    const totalTasks =tasks.length;
+    const progress =(completeTasks/totalTasks) *100;
     const progressBar=document.getElementById('progress')
     
     progressBar.style.width =`${progress}%`;
@@ -72,12 +75,20 @@ const updateTaskList = ()=> {
 
     tasks.forEach((task,index) => {
         const listItem = document.createElement("li");
-
+        let dateText ="";
+        if(task.updatedAt && task.createdAt !== task.updatedAt){
+          dateText= `<small>Updated on: ${new Date(task.createdAt).toLocaleDateString()}</small>`;
+        }
+        else if(task.updatedAt){
+          dateText= `<small>Created on: ${new Date(task.updatedAt).toLocaleDateString()}</small>`;
+        }
+      
         listItem.innerHTML = `
          <div class="taskItem">
         <div class="task  ${task.completed ? "completed": ""}">
             <input type="checkbox" class="checkbox" ${task.completed? "checked" : ""}/>
             <p>${task.text}</p>
+            ${dateText}
         </div>
         <div class="icons">
              <img src="./images/output-onlinepngtools (2).png" onclick="editTask(${index})" />
