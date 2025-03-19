@@ -1,0 +1,57 @@
+body{
+ position: relative;
+ background-color: honeydew;
+}
+
+#f1{
+    position: absolute;
+    top: 200px;
+    left: 33%;
+    border: black solid 2px;
+    border-radius: 20px;
+    width: 450px;
+    height: 380px;
+    background-color: white;
+    text-align: center;
+    
+}
+#f2{
+    position: absolute;
+    top: 200px;
+    left: 33%;
+    border: black solid 2px;
+    border-radius: 20px;
+    width: 450px;
+    height: 280px;
+    background-color: white;
+    text-align: center;
+    
+}
+label{
+    font-size: larger;
+}
+input{
+    border: black solid 2px;
+    border-radius: 5px;
+    padding: 6px;
+}
+::placeholder{
+    color: black;
+}
+td{
+    padding: 10px;
+}
+button{
+    background-color: black;
+   cursor: pointer;
+    border-radius:4px ;
+    padding: 4px;
+    width: 80px;
+    font-size: medium;
+    color: aliceblue;
+}
+table{
+    display: flex;
+    justify-content: center;
+    
+}
